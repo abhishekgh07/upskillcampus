@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Browse Services</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">ServiceHub</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="browse.html">Browse</a></li>
+      <li><a href="#">Login</a></li>
+    </ul>
+  </nav>
+
+  <section class="browse-section">
+    <h2>Browse Services</h2>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setActive(this)">All</button>
+      <button class="filter-btn" onclick="setActive(this)">Home</button>
+      <button class="filter-btn" onclick="setActive(this)">Beauty</button>
+      <button class="filter-btn" onclick="setActive(this)">Pet</button>
+      <button class="filter-btn" onclick="setActive(this)">Repairs</button>
+    </div>
+
+    <div class="card-grid" id="services-container">
+      <!-- Services load here from database -->
+    </div>
+  </section>
+
+  <footer><p>&copy; 2024 ServiceHub</p></footer>
+
+  <script>
+    function setActive(btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    async function loadServices() {
+      try {
+        const res = await fetch('http://localhost:3000/api/services');
+        const services = await res.json();
+        const container = document.getElementById('services-container');
+        container.innerHTML = services.map(s => `
+          <div class="service-card">
+            <h3>${s.name}</h3>
+            <p>Category: ${s.category}</p>
+            <p>Price: &#8377;${s.price}/hr</p>
+            <p>By: ${s.merchant}</p>
+            <a href="profile.html"><button class="btn">View Details</button></a>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.log('Error loading services:', err);
+      }
+    }
+    loadServices();
+  </script>
+</body>
+</html>

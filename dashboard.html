@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Merchant Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">ServiceHub</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="browse.html">Browse</a></li>
+      <li><a href="#">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard-wrapper">
+    <aside class="sidebar">
+      <h3>My Dashboard</h3>
+      <ul>
+        <li><a href="#">My Services</a></li>
+        <li><a href="#">Add Service</a></li>
+        <li><a href="#">Orders</a></li>
+        <li><a href="#">Profile</a></li>
+      </ul>
+    </aside>
+
+    <main class="dashboard-main">
+      <h2>My Listed Services</h2>
+      <div class="card-grid">
+        <div class="service-card">
+          <h3>Home Cleaning</h3>
+          <p>Category: Home</p>
+          <p>Price: ₹500/hr</p>
+          <div class="card-actions">
+            <button class="btn">Edit</button>
+            <button class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+        <div class="service-card">
+          <h3>Hair Styling</h3>
+          <p>Category: Beauty</p>
+          <p>Price: ₹300/hr</p>
+          <div class="card-actions">
+            <button class="btn">Edit</button>
+            <button class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer><p>&copy; 2024 ServiceHub</p></footer>
+</body>
+</html>

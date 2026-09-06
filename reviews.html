@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reviews</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">ServiceHub</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="browse.html">Browse</a></li>
+    </ul>
+  </nav>
+
+  <section class="reviews-section">
+    <h2>Leave a Review</h2>
+
+    <!-- Review Form -->
+    <div class="review-form">
+      <input type="text" id="customerName" placeholder="Your Name" class="input-field"/>
+      <input type="text" id="merchantName" placeholder="Merchant / Service Name" class="input-field"/>
+      
+      <!-- Star Rating -->
+      <div class="star-rating">
+        <span>Rating:</span>
+        <span class="star" onclick="setRating(1)">★</span>
+        <span class="star" onclick="setRating(2)">★</span>
+        <span class="star" onclick="setRating(3)">★</span>
+        <span class="star" onclick="setRating(4)">★</span>
+        <span class="star" onclick="setRating(5)">★</span>
+      </div>
+
+      <textarea id="comment" placeholder="Write your review here..." class="input-field" rows="4"></textarea>
+      <button class="btn" onclick="submitReview()">Submit Review</button>
+      <p id="review-msg" style="color:green; margin-top:10px;"></p>
+    </div>
+
+    <!-- Existing Reviews -->
+    <h2 style="margin-top:40px;">Customer Reviews</h2>
+    <div id="reviews-container"></div>
+  </section>
+
+  <footer><p>&copy; 2024 ServiceHub</p></footer>
+
+  <script>
+    let selectedRating = 0;
+
+    function setRating(rating) {
+      selectedRating = rating;
+      document.querySelectorAll('.star').forEach((star, index) => {
+        star.style.color = index < rating ? '#f5a623' : '#ccc';
+      });
+    }
+
+    async function submitReview() {
+      const customerName = document.getElementById('customerName').value;
+      const merchantName = document.getElementById('merchantName').value;
+      const comment = document.getElementById('comment').value;
+
+      if (!customerName || !merchantName || !comment || selectedRating === 0) {
+        alert('Please fill in all fields and select a rating!');
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:3000/api/services/review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ customerName, merchantName, rating: selectedRating, comment })
+        });
+        const data = await res.json();
+        document.getElementById('review-msg').innerText = '✅ Review submitted successfully!';
+        document.getElementById('customerName').value = '';
+        document.getElementById('merchantName').value = '';
+        document.getElementById('comment').value = '';
+        selectedRating = 0;
+        document.querySelectorAll('.star').forEach(star => star.style.color = '#ccc');
+        loadReviews();
+      } catch (err) {
+        alert('Failed to submit review. Make sure the server is running!');
+      }
+    }
+
+    async function loadReviews() {
+      try {
+        const res = await fetch('http://localhost:3000/api/services/reviews');
+        const reviews = await res.json();
+        const container = document.getElementById('reviews-container');
+        container.innerHTML = reviews.map(r => `
+          <div class="review-card">
+            <div style="display:flex; justify-content:space-between;">
+              <strong>${r.customerName}</strong>
+              <span style="color:#f5a623">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+            </div>
+            <p style="color:#888; font-size:13px;">Service: ${r.merchantName}</p>
+            <p>${r.comment}</p>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.log('Could not load reviews');
+      }
+    }
+
+    loadReviews();
+  </script>
+</body>
+</html>
